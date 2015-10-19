@@ -1,22 +1,64 @@
 language: cpp
-sudo: true
+sudo: false
+#true#change to false once all the packages are available
+
+#see: https://github.com/travis-ci/apt-package-whitelist
+addons:
+  apt:
+    sources: #see: https://github.com/travis-ci/apt-source-whitelist
+      - r-packages-trusty
+      - ubuntu-toolchain-r-test
+    packages: #see: https://github.com/travis-ci/apt-package-whitelist
+      - cmake
+      - gcc-5 #5 they claim to have 5 available, but not working
+      - g++-5 #5 same
+      - g++-multilib
+      - clang
+      - libsdl2-dev
+      - libjpeg-turbo8-dev
+      - zlib1g-dev
+      - libpng12-dev
+      - libglib2.0-dev
+      - libglu1-mesa-dev
+      - libsdl2-dev:i386 #Not available (yet)
+      - libjpeg-turbo8-dev:i386
+      - zlib1g-dev:i386
+      - libpng12-dev:i386
+      - libglu1-mesa-dev:i386
+      - libpulse-dev:i386
+      - libglu1-mesa-dev:i386
+      - libc6-dev:i386
+      - g++-multilib
+      - mingw32
+      - g++-mingw-w64-i686
+      - gcc-mingw-w64-i686
+      - mingw-w64
+      - gcc-mingw-w64-x86-64
+      - g++-mingw-w64-x86-64
 
 install:
-  - ./tools/travis-install.sh "${host:-native}" "${flavour:-Release}" $opts
+  - cat /home/travis/build.sh
+  - ls -al /usr/bin
+  - ls -al /usr/bin/*gcc*
+  - ls -al /usr/lib
+  #- ./tools/travis-install.sh "${host:-native}" "${flavour:-Release}" $opts
 
 script:
   - ./tools/travis-build.sh "${host:-native}" "${flavour:-Release}" $opts
 
-compiler: gcc
+compiler:
+  - gcc-5
+  - clang
+  - x86_64-w64-mingw32-gcc
+#  - i686-w64-mingw32-gcc
 env:
-  - ""
-  - flavour=Debug
-  #- host=i686-linux-gnu
+  - buildtype=Release
+  - buildtype=Debug
+  - host=i686-linux-gnu
   - host=i686-w64-mingw32
   - host=x86_64-w64-mingw32
 
-# One extra build with clang, its warnings are often better
-matrix:
-  include:
-    - compiler: clang
-      env: ""
+#matrix:
+#  include:
+#    - compiler: clang
+#      env: ""
